@@ -1,4 +1,5 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+This will be a 100% mobile version of Drawango
 
 ## Available Scripts
 
