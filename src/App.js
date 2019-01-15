@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import openSocket from 'socket.io-client';
 
 class App extends Component {
   constructor() {
     super()
     this.state = {
+      socket: openSocket('http://localhost:1337'),
 
     }
+    this.state.socket.on('connection', (received) => {
+      console.log(received)
+    })
+  }
+  componentDidMount() {
+    
   }
 
   render() {
