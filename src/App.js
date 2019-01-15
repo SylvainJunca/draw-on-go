@@ -24,7 +24,22 @@ class App extends Component {
   pickRoom = () => {
     this.state.socket.emit('room');
   }
+  enterRoom = (event) => {
+		event.preventDefault();
+		const room = event.target.elements.room.value.toUpperCase();;
+		this.state.socket.emit('join', room);
+	};
+  
   render() {
+
+    const login = <div>
+      <button onClick={this.pickRoom}>Enter a room</button>
+      <form onSubmit={this.enterRoom}>
+				<input type="text" name="room" placeholder="Enter the room" maxlength="6"/>
+				<input type="submit" value="Get me in this room!" />
+			</form>
+    </div>
+
     return (
       <div className="App">
         <header className="App-header">
@@ -32,8 +47,9 @@ class App extends Component {
           <p>
             Welcome to Draw On GO !
           </p>
+          {this.state.room ? <p>{this.state.room}</p> : login}
         </header>
-      {this.state.room ? <p>{this.state.room}</p> : <button onClick={this.pickRoom}>Enter a room</button>}
+      
       </div>
     );
   }

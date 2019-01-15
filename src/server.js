@@ -22,10 +22,20 @@ io.on('connection', function(socket) {
   socket.emit('connection', 'Welcome');
 
   socket.on('room', () => {
-  const room = createRoom();
-  socket.join(room);
-  rooms.push[room];
-  socket.emit('room', `You've joined room ${room}`)
+    const room = createRoom();
+    socket.join(room);
+    rooms.push[room];
+    socket.emit('room', `You've joined room ${room}`)
+  })
+  socket.on('join', (room) => {
+    const existing = false;
+    for (const each in rooms) {
+      if (each === room) existing = true;
+    }
+    if (existing) {
+    socket.join(room);
+    socket.emit('room', `You've joined room ${room}`)
+    }
   })
 
   socket.on('submitName', (name) => {
