@@ -9,7 +9,8 @@ class App extends Component {
     this.state = {
       socket: openSocket('http://localhost:1337'),
       room: null,
-      error: ''
+      message: '',
+      error: '',
     }
     
   }
@@ -23,6 +24,10 @@ class App extends Component {
     })
     this.state.socket.on('err', (message) => {
       this.setState( {error : message})
+    })
+    this.state.socket.on('message', (message) => {
+      this.setState({message : message});
+      console.log(`message received : ${message}`)
     })
   }
   
@@ -54,6 +59,7 @@ class App extends Component {
             Welcome to Draw On GO !
           </p>
           {this.state.room ? <p>You've entered room {this.state.room}</p> : login}
+          {this.state.message}
           {this.state.error}
         </header>
       
