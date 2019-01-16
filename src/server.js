@@ -24,17 +24,24 @@ io.on('connection', function(socket) {
   socket.on('room', () => {
     const room = createRoom();
     socket.join(room);
-    rooms.push[room];
-    socket.emit('room', `You've joined room ${room}`)
+    rooms.push(room);
+    console.log(`List of existing rooms : ${rooms}`)
+    socket.emit('room', room)
   })
   socket.on('join', (room) => {
-    const existing = false;
-    for (const each in rooms) {
-      if (each === room) existing = true;
+    let existing = false;
+    console.log(`tries to enter room ${room}`)
+    for (const each of rooms) {
+      if (each === room) {
+        existing = true;
+        console.log('rooms exists, we should be able to enter')
+      }
     }
     if (existing) {
-    socket.join(room);
-    socket.emit('room', `You've joined room ${room}`)
+      socket.join(room);
+      socket.emit('room', room )
+    } else {
+      socket.emit('err', 'Please verify your code')
     }
   })
 
