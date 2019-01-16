@@ -7,7 +7,7 @@ io.listen(port)
 console.log(`Listening on port ${port}...` )
 
 const connected = {}
-rooms = [];
+rooms = {};
 
 const createRoom = () => {
   let room = "";
@@ -19,26 +19,22 @@ return room;
 }
 
 io.on('connection', function(socket) {
-  socket.emit('connection', 'Welcome');
+  socket.emit('connection', 'Welcome ' + socket.id);
 
   socket.on('room', () => {
     const room = createRoom();
     socket.join(room);
-    rooms.push(room);
-    console.log(`List of existing rooms : ${rooms}`)
-    socket.emit('room', room)
+    rooms[room] = 1;
+    console.log(`List of existing rooms : ${rooms} and ${io.sockets.adapter.rooms}`)
+    socket.emit('room', room )
   })
   socket.on('join', (room) => {
-    let existing = false;
+    
     console.log(`tries to enter room ${room}`)
-    for (const each of rooms) {
-      if (each === room) {
-        existing = true;
-        console.log('rooms exists, we should be able to enter')
-      }
-    }
-    if (existing) {
+    if (rooms[room]) {
       socket.join(room);
+      rooms[room] += 1;
+      console.log(`There are now ${rooms[room]} people in your room`)
       socket.emit('room', room )
     } else {
       socket.emit('err', 'Please verify your code')
