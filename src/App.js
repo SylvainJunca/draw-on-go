@@ -56,7 +56,7 @@ class App extends Component {
     return (
       <div className="App">
         <NavBar room={this.state.room} />
-        <JoinGame gameData={this.state} joinRoom={this.joinRoom} JoinGame={this.JoinGame}/>    
+        <JoinGame gameData={this.state} pickRoom={this.pickRoom} joinRoom={this.joinRoom} JoinGame={this.JoinGame}/>    
       </div>
     );
   }

@@ -4,7 +4,7 @@ class JoinGame extends Component {
   
   render() {
     const rooms = this.props.gameData.listRooms.map((room) => (
-      <button onClick={() => {this.joinRoom(room)}} key={room}>{room}</button>
+      <button onClick={() => {this.props.joinRoom(room)}} key={room}>{room}</button>
     ));
     const login = <div>
       <button onClick={this.props.pickRoom}>Enter a room</button>
