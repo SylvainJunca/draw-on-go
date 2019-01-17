@@ -20,6 +20,10 @@ return room;
 const playerEnters = (room) => {
   io.to(room).emit('message',`You are now ${rooms[room]} players connected`)
 }
+const updateNumberPlayers = (whichRoom) => {
+  const room = io.sockets.adapter.rooms[whichRoom];
+  rooms[whichRoom] = room.length;
+}
 
 const listRooms = () => {
   const listRooms = []
@@ -36,7 +40,7 @@ io.on('connection', function(socket) {
     const room = createRoom();
     io.emit('listRooms', listRooms());
     socket.join(room);
-    rooms[room] = 1;
+    updateNumberPlayers(room);
     playerEnters(room);
     console.log(`List of existing rooms : ${rooms} and ${io.sockets.adapter.rooms}`)
     socket.emit('room', room )
@@ -46,7 +50,7 @@ io.on('connection', function(socket) {
     console.log(`tries to enter room ${room}`)
     if (rooms[room]) {
       socket.join(room);
-      rooms[room] += 1;
+      updateNumberPlayers(room);
       playerEnters(room);
       console.log(`There are now ${rooms[room]} people in your room`)
       socket.emit('room', room )
