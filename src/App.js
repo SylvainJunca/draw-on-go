@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import ListRooms from './ListRoooms'
+import NavBar from './NavBar';
 import './App.css';
 import openSocket from 'socket.io-client';
 
@@ -8,6 +9,7 @@ class App extends Component {
     super()
     this.state = {
       socket: openSocket('http://localhost:1337'),
+      listRooms: null,
       room: null,
       message: '',
       error: '',
@@ -17,6 +19,9 @@ class App extends Component {
   componentDidMount() {
     this.state.socket.on('connection', (received) => {
       console.log(received)
+    })
+    this.state.socket.on('listRooms', (listRooms) => {
+      this.setState({listRooms: listRooms})
     })
     this.state.socket.on('room', (received) => {
       this.setState({room : received})
@@ -42,7 +47,9 @@ class App extends Component {
 	};
   
   render() {
-
+    const rooms = this.state.listRooms.map((room) => {
+      <ListRooms room={room} />
+    })
     const login = <div>
       <button onClick={this.pickRoom}>Enter a room</button>
       <form onSubmit={this.enterRoom}>
@@ -51,17 +58,20 @@ class App extends Component {
 			</form>
     </div>
 
+    
+
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+        <NavBar room={this.state.room} />
+        <header>
           <p>
             Welcome to Draw On GO !
           </p>
+        </header>
           {this.state.room ? <p>You've entered room {this.state.room}</p> : login}
           {this.state.message}
           {this.state.error}
-        </header>
+        
       
       </div>
     );

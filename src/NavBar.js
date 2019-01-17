@@ -1,4 +1,4 @@
-import React { Component } from 'react';
+import React, { Component } from 'react';
 
 
 class NavBar extends Component { 
@@ -8,6 +8,11 @@ class NavBar extends Component {
   }
 
   render() {
-    
+    return (
+      <div>
+      {this.props.room ? <span>Connected to {this.props.room}</span> : ''}
+      </div>
+    )
   }
 }
+export default NavBar;
