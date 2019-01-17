@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ListRooms from './ListRooms'
 import NavBar from './NavBar';
 import './App.css';
 import openSocket from 'socket.io-client';
@@ -73,8 +72,7 @@ class App extends Component {
             Welcome to Draw On GO !
           </p>
         </header>
-          {this.state.room ? '' : rooms}
-          {this.state.room ? <p>You've entered room {this.state.room}</p> : login}
+          {this.state.room ? '' : <div>{rooms} {login}</div>}
           {this.state.message}
           {this.state.error}
         
