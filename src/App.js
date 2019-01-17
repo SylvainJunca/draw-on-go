@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import NavBar from './NavBar';
+import JoinGame from './JoinGame';
 import './App.css';
 import openSocket from 'socket.io-client';
 
@@ -10,6 +11,7 @@ class App extends Component {
       socket: openSocket('http://localhost:1337'),
       listRooms: [],
       room: null,
+      stage: '',
       message: '',
       error: '',
     }
@@ -51,32 +53,10 @@ class App extends Component {
   
   
   render() {
-    const rooms = this.state.listRooms.map((room) => (
-      <button onClick={() => {this.joinRoom(room)}} key={room}>{room}</button>
-    ));
-    const login = <div>
-      <button onClick={this.pickRoom}>Enter a room</button>
-      <form onSubmit={this.enterRoom}>
-				<input type="text" name="room" placeholder="Enter the room" maxLength="6"/>
-				<input type="submit" value="Get me in this room!" />
-			</form>
-    </div>
-
-    
-
     return (
       <div className="App">
         <NavBar room={this.state.room} />
-        <header>
-          <p>
-            Welcome to Draw On GO !
-          </p>
-        </header>
-          {this.state.room ? '' : <div>{rooms} {login}</div>}
-          {this.state.message}
-          {this.state.error}
-        
-      
+        <JoinGame gameData={this.state} joinRoom={this.joinRoom} JoinGame={this.JoinGame}/>    
       </div>
     );
   }

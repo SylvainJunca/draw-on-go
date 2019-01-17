@@ -62,6 +62,9 @@ io.on('connection', function(socket) {
   socket.on('submitName', (name) => {
 
   } )
-
+  socket.on('disconnect', () => {
+    io.emit('myCustomEvent', {customEvent: 'Custom Message'})
+    console.log('Socket disconnected: ' + _id)
+  })
 
 })
