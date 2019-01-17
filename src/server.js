@@ -21,11 +21,20 @@ const playerEnters = (room) => {
   io.to(room).emit('message',`You are now ${rooms[room]} players connected`)
 }
 
+const listRooms = () => {
+  const listRooms = []
+  for (const room in rooms) {
+    listRooms.push(room)
+  }
+  return listRooms;
+}
+
 io.on('connection', function(socket) {
   socket.emit('connection', 'Welcome ' + socket.id);
-
+  io.emit('listRooms', listRooms());
   socket.on('room', () => {
     const room = createRoom();
+    io.emit('listRooms', listRooms());
     socket.join(room);
     rooms[room] = 1;
     playerEnters(room);

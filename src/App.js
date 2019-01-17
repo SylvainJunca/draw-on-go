@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ListRooms from './ListRoooms'
+import ListRooms from './ListRooms'
 import NavBar from './NavBar';
 import './App.css';
 import openSocket from 'socket.io-client';
@@ -9,7 +9,7 @@ class App extends Component {
     super()
     this.state = {
       socket: openSocket('http://localhost:1337'),
-      listRooms: null,
+      listRooms: [],
       room: null,
       message: '',
       error: '',
@@ -22,6 +22,7 @@ class App extends Component {
     })
     this.state.socket.on('listRooms', (listRooms) => {
       this.setState({listRooms: listRooms})
+      console.log(`list of rooms :${listRooms}`)
     })
     this.state.socket.on('room', (received) => {
       this.setState({room : received})
@@ -44,12 +45,16 @@ class App extends Component {
     const room = event.target.elements.room.value.toUpperCase();
     console.log(room)
 		this.state.socket.emit('join', room);
-	};
+  };
+  joinRoom = (room) => {
+    this.state.socket.emit('join', room);
+  };
+  
   
   render() {
-    const rooms = this.state.listRooms.map((room) => {
-      <ListRooms room={room} />
-    })
+    const rooms = this.state.listRooms.map((room) => (
+      <button onClick={() => {this.joinRoom(room)}} key={room}>{room}</button>
+    ));
     const login = <div>
       <button onClick={this.pickRoom}>Enter a room</button>
       <form onSubmit={this.enterRoom}>
@@ -68,6 +73,7 @@ class App extends Component {
             Welcome to Draw On GO !
           </p>
         </header>
+          {this.state.room ? '' : rooms}
           {this.state.room ? <p>You've entered room {this.state.room}</p> : login}
           {this.state.message}
           {this.state.error}
