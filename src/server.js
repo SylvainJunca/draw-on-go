@@ -6,7 +6,6 @@ const port = 1337
 io.listen(port)
 console.log(`Listening on port ${port}...` )
 
-const connected = {}
 rooms = {};
 
 const createRoom = () => {
@@ -36,12 +35,13 @@ const listRooms = () => {
 io.on('connection', function(socket) {
   socket.emit('connection', 'Welcome ' + socket.id);
   io.emit('listRooms', listRooms());
+  
   socket.on('room', () => {
     const room = createRoom();
     io.emit('listRooms', listRooms());
     socket.join(room);
     updateNumberPlayers(room);
-    playerEnters(room);
+    // playerEnters(room);
     console.log(`List of existing rooms : ${rooms} and ${io.sockets.adapter.rooms}`)
     socket.emit('room', room )
   })
@@ -64,7 +64,7 @@ io.on('connection', function(socket) {
   } )
   socket.on('disconnect', () => {
     io.emit('myCustomEvent', {customEvent: 'Custom Message'})
-    console.log('Socket disconnected: ' + _id)
+    console.log('Socket disconnected: ')
   })
 
 })
