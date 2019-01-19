@@ -4,7 +4,6 @@ import JoinGame from './JoinGame';
 import SubmitName from './SubmitName';
 import './App.css';
 import openSocket from 'socket.io-client';
-import { defaultCipherList } from 'constants';
 
 class App extends Component {
   constructor() {
@@ -42,7 +41,7 @@ class App extends Component {
   
   submitName = (event) => {
     event.preventDefault();
-    const username = event.target.elements.name.value();
+    const username = event.target.elements.name.value;
     console.log(username);
     this.state.socket.emit('username', username);
     this.setState({ username: username});
@@ -64,7 +63,7 @@ class App extends Component {
     return (
       <div className="App">
         <NavBar room={this.state.room} />
-        {this.state.username ? '' : <SubmitName />}
+        {this.state.username ? '' : <SubmitName submitName={this.submitName}/>}
         <JoinGame gameData={this.state} pickRoom={this.pickRoom} joinRoom={this.joinRoom} JoinGame={this.JoinGame}/>    
       </div>
     );

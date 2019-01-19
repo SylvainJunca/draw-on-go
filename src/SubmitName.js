@@ -6,7 +6,7 @@ class SubmitName extends Component {
 
     return (
       <form onSubmit={this.props.submitName}>
-        <input type="text" name="room" placeholder="Please enter your username" maxLength="10"/>
+        <input type="text" name="name" placeholder="Please enter your username" maxLength="10"/>
         <input type="submit"/>
       </form>
     )

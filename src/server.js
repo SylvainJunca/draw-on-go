@@ -35,6 +35,11 @@ const listRooms = () => {
 io.on('connection', function(socket) {
   socket.emit('connection', 'Welcome ' + socket.id);
   io.emit('listRooms', listRooms());
+
+  socket.on('username', (username) => {
+    socket.username = username;
+    console.log(` socket id : ${socket.id} username ${socket.username}`);
+  })
   
   socket.on('room', () => {
     const room = createRoom();
