@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
 import NavBar from './NavBar';
 import JoinGame from './JoinGame';
+import SubmitName from './SubmitName';
 import './App.css';
 import openSocket from 'socket.io-client';
+import { defaultCipherList } from 'constants';
 
 class App extends Component {
   constructor() {
     super()
     this.state = {
       socket: openSocket('http://localhost:1337'),
+      username: '',
       listRooms: [],
       room: null,
       stage: '',
       message: '',
       error: '',
     }
-    
   }
   componentDidMount() {
     this.state.socket.on('connection', (received) => {
@@ -38,6 +40,13 @@ class App extends Component {
     })
   }
   
+  submitName = (event) => {
+    event.preventDefault();
+    const username = event.target.elements.name.value();
+    console.log(username);
+    this.state.socket.emit('username', username);
+    this.setState({ username: username});
+  }
   pickRoom = () => {
     this.state.socket.emit('room');
   }
@@ -51,11 +60,11 @@ class App extends Component {
     this.state.socket.emit('join', room);
   };
   
-  
   render() {
     return (
       <div className="App">
         <NavBar room={this.state.room} />
+        {this.state.username ? '' : <SubmitName />}
         <JoinGame gameData={this.state} pickRoom={this.pickRoom} joinRoom={this.joinRoom} JoinGame={this.JoinGame}/>    
       </div>
     );
