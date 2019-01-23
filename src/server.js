@@ -19,9 +19,9 @@ return room;
 const playerEnters = (room) => {
   io.to(room).emit('message',`You are now ${rooms[room]} players connected`)
 }
-const updateNumberPlayers = (whichRoom) => {
-  const room = io.sockets.adapter.rooms[whichRoom];
-  rooms[whichRoom] = room.length;
+const usernameInRoom = (whichRoom) => {
+  //const room = io.sockets.adapter.rooms[whichRoom];
+  rooms[whichRoom] = [...rooms[whichRoom], socket.username];
 }
 
 const listRooms = () => {
@@ -34,7 +34,7 @@ const listRooms = () => {
 
 io.on('connection', function(socket) {
   socket.emit('connection', 'Welcome ' + socket.id);
-  io.emit('listRooms', listRooms());
+  socket.emit('listRooms', listRooms());
 
   socket.on('username', (username) => {
     socket.username = username;
@@ -43,9 +43,10 @@ io.on('connection', function(socket) {
   
   socket.on('room', () => {
     const room = createRoom();
-    io.emit('listRooms', listRooms());
     socket.join(room);
-    updateNumberPlayers(room);
+    rooms[room] = []
+    usernameInRoom(room);
+    io.emit('listRooms', listRooms());
     // playerEnters(room);
     console.log(`List of existing rooms : ${rooms} and ${io.sockets.adapter.rooms}`)
     socket.emit('room', room )
