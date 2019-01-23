@@ -19,6 +19,21 @@ return room;
 const playerEnters = (room) => {
   io.to(room).emit('players', rooms[room])
 }
+const playerLeaves = (room, username) => {
+  const players = rooms[room];
+  console.log(`players : ${players}`)
+  const newPlayers = players.reduce((acc, player) => {
+    if (player !== username) acc.push(player);
+    return acc
+  }, []);
+  console.log(`${username} should be romoved : ${newPlayers}`)
+  if (players) {
+    rooms[room] = newPlayers
+    io.to(room).emit('players', rooms[room]);
+  } else {
+    delete rooms[room]
+  }
+}
 const usernameInRoom = (whichRoom, username) => {
   //const room = io.sockets.adapter.rooms[whichRoom];
   rooms[whichRoom] ? people = rooms[whichRoom] : people = [];
@@ -47,7 +62,8 @@ io.on('connection', function(socket) {
   socket.on('room', () => {
     const room = createRoom();
     socket.join(room);
-    rooms[room] = []
+    socket.room = room;
+    rooms[room] = [];
     usernameInRoom(room, socket.username);
     playerEnters(room);
     io.emit('listRooms', listRooms());
@@ -59,9 +75,10 @@ io.on('connection', function(socket) {
     console.log(`tries to enter room ${room}`)
     if (rooms[room]) {
       socket.join(room);
+      socket.room = room;
       usernameInRoom(room, socket.username);
       playerEnters(room);
-      console.log(`There are now ${rooms[room]} people in your room`)
+      console.log(`People in the room : ${rooms[room]}`)
       socket.emit('room', room )
     } else {
       socket.emit('err', 'Please verify your code')
@@ -72,6 +89,10 @@ io.on('connection', function(socket) {
 
   } )
   socket.on('disconnect', () => {
+    socket.leave(socket.room)
+    if (socket.room) {
+    playerLeaves(socket.room, socket.username)
+    }
     io.emit('myCustomEvent', {customEvent: 'Custom Message'})
     console.log('Socket disconnected: ')
   })
