@@ -27,11 +27,12 @@ const playerLeaves = (room, username) => {
     return acc
   }, []);
   console.log(`${username} should be romoved : ${newPlayers}`)
-  if (players) {
+  if (newPlayers.length > 0) {
     rooms[room] = newPlayers
     io.to(room).emit('players', rooms[room]);
   } else {
-    delete rooms[room]
+    delete rooms[room];
+    io.emit('listRooms', listRooms());
   }
 }
 const usernameInRoom = (whichRoom, username) => {
