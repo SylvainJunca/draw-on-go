@@ -17,11 +17,14 @@ const createRoom = () => {
 return room;
 }
 const playerEnters = (room) => {
-  io.to(room).emit('message',`You are now ${rooms[room]} players connected`)
+  io.to(room).emit('players', rooms[room])
 }
-const usernameInRoom = (whichRoom) => {
+const usernameInRoom = (whichRoom, username) => {
   //const room = io.sockets.adapter.rooms[whichRoom];
-  rooms[whichRoom] = [...rooms[whichRoom], socket.username];
+  rooms[whichRoom] ? people = rooms[whichRoom] : people = [];
+  people.push(username)
+  rooms[whichRoom] = people;
+  console.log(`people is the room : ${people}`)
 }
 
 const listRooms = () => {
@@ -45,9 +48,9 @@ io.on('connection', function(socket) {
     const room = createRoom();
     socket.join(room);
     rooms[room] = []
-    usernameInRoom(room);
+    usernameInRoom(room, socket.username);
+    playerEnters(room);
     io.emit('listRooms', listRooms());
-    // playerEnters(room);
     console.log(`List of existing rooms : ${rooms} and ${io.sockets.adapter.rooms}`)
     socket.emit('room', room )
   })
@@ -56,7 +59,7 @@ io.on('connection', function(socket) {
     console.log(`tries to enter room ${room}`)
     if (rooms[room]) {
       socket.join(room);
-      updateNumberPlayers(room);
+      usernameInRoom(room, socket.username);
       playerEnters(room);
       console.log(`There are now ${rooms[room]} people in your room`)
       socket.emit('room', room )

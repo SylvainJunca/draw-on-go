@@ -13,6 +13,7 @@ class App extends Component {
       username: '',
       listRooms: [],
       room: null,
+      players: [],
       stage: '',
       message: '',
       error: '',
@@ -32,6 +33,9 @@ class App extends Component {
     })
     this.state.socket.on('err', (message) => {
       this.setState( {error : message})
+    })
+    this.state.socket.on('players', (players) => {
+      this.setState( {players : players})
     })
     this.state.socket.on('message', (message) => {
       this.setState({message : message});
@@ -62,7 +66,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <NavBar room={this.state.room} />
+        <NavBar room={this.state.room} players={this.state.players}/>
         {this.state.username ? '' : <SubmitName submitName={this.submitName}/>}
         <JoinGame gameData={this.state} pickRoom={this.pickRoom} joinRoom={this.joinRoom} JoinGame={this.JoinGame}/>    
       </div>

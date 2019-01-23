@@ -10,7 +10,7 @@ class NavBar extends Component {
   render() {
     return (
       <div>
-      {this.props.room ? <span>Room# {this.props.room} / Online : {this.props.numberPlayers}</span> : ''}
+      {this.props.room ? <span>Room# {this.props.room} / Online : {this.props.players.length}</span> : ''}
       
       </div>
     )
