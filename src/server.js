@@ -50,6 +50,13 @@ const listRooms = () => {
   }
   return listRooms;
 }
+const enterRoom = (socket, room, username) => {
+  socket.join(room);
+  socket.room = room;
+  usernameInRoom(room, username);
+  playerEnters(room);
+  socket.emit('room', room );
+}
 
 io.on('connection', function(socket) {
   socket.emit('connection', 'Welcome ' + socket.id);
@@ -62,25 +69,18 @@ io.on('connection', function(socket) {
   
   socket.on('room', () => {
     const room = createRoom();
-    socket.join(room);
-    socket.room = room;
+    enterRoom(socket, room, socket.username);
     rooms[room] = [];
-    usernameInRoom(room, socket.username);
-    playerEnters(room);
     io.emit('listRooms', listRooms());
     console.log(`List of existing rooms : ${rooms} and ${io.sockets.adapter.rooms}`)
-    socket.emit('room', room )
+   
   })
   socket.on('join', (room) => {
     
     console.log(`tries to enter room ${room}`)
     if (rooms[room]) {
-      socket.join(room);
-      socket.room = room;
-      usernameInRoom(room, socket.username);
-      playerEnters(room);
+      enterRoom(socket, room, socket.username);
       console.log(`People in the room : ${rooms[room]}`)
-      socket.emit('room', room )
     } else {
       socket.emit('err', 'Please verify your code')
     }
