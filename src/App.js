@@ -9,7 +9,6 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      socket: openSocket('http://localhost:1337'),
       username: '',
       listRooms: [],
       room: null,
@@ -19,25 +18,32 @@ class App extends Component {
       error: '',
     }
   }
+  static getHostName() {
+		const parser = document.createElement('a');
+		parser.href = document.location;
+		return parser.hostname;
+	}
   componentDidMount() {
-    this.state.socket.on('connection', (received) => {
+    const hostname = App.getHostName();
+    this.socket = openSocket('http://' + hostname + ':' + 1337);
+    this.socket.on('connection', (received) => {
       console.log(received)
     })
-    this.state.socket.on('listRooms', (listRooms) => {
+    this.socket.on('listRooms', (listRooms) => {
       this.setState({listRooms: listRooms})
       console.log(`list of rooms :${listRooms}`)
     })
-    this.state.socket.on('room', (received) => {
+    this.socket.on('room', (received) => {
       this.setState({room : received})
       console.log(`entering room ${this.state.room}`)
     })
-    this.state.socket.on('err', (message) => {
+    this.socket.on('err', (message) => {
       this.setState( {error : message})
     })
-    this.state.socket.on('players', (players) => {
+    this.socket.on('players', (players) => {
       this.setState( {players : players})
     })
-    this.state.socket.on('message', (message) => {
+    this.socket.on('message', (message) => {
       this.setState({message : message});
       console.log(`message received : ${message}`)
     })
@@ -47,20 +53,20 @@ class App extends Component {
     event.preventDefault();
     const username = event.target.elements.name.value;
     console.log(username);
-    this.state.socket.emit('username', username);
+    this.socket.emit('username', username);
     this.setState({ username: username});
   }
   pickRoom = () => {
-    this.state.socket.emit('room');
+    this.socket.emit('room');
   }
   enterRoom = (event) => {
 		event.preventDefault();
     const room = event.target.elements.room.value.toUpperCase();
     console.log(room)
-		this.state.socket.emit('join', room);
+		this.socket.emit('join', room);
   };
   joinRoom = (room) => {
-    this.state.socket.emit('join', room);
+    this.socket.emit('join', room);
   };
   
   render() {
