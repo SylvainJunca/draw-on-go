@@ -74,8 +74,8 @@ class App extends Component {
     return (
       <div className="App">
         <NavBar room={this.state.room} players={this.state.players}/>
-        {this.state.username ? '' : <SubmitName submitName={this.submitName}/>}
-        <JoinGame gameData={this.state} pickRoom={this.pickRoom} joinRoom={this.joinRoom} JoinGame={this.JoinGame}/>
+        <h2>Welcome to Draw On Go</h2>
+        {this.state.username ? <JoinGame gameData={this.state} pickRoom={this.pickRoom} joinRoom={this.joinRoom} JoinGame={this.JoinGame}/> : <SubmitName submitName={this.submitName}/>}
         {this.state.room ? <GameLobby gameData={this.state} /> : ''}    
       </div>
     );

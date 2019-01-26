@@ -5,9 +5,8 @@ class NavBar extends Component {
 
   render() {
     return (
-      <div>
+      <div className='NavBar'>
       {this.props.room ? <span>Room# {this.props.room} / Online : {this.props.players.length}</span> : <span>Not connected to a game</span>}
-      
       </div>
     )
   }
