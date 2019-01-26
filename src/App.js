@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import NavBar from './NavBar';
 import JoinGame from './JoinGame';
 import SubmitName from './SubmitName';
+import GameLobby from './GameLobby';
 import './App.css';
 import openSocket from 'socket.io-client';
 
@@ -74,7 +75,8 @@ class App extends Component {
       <div className="App">
         <NavBar room={this.state.room} players={this.state.players}/>
         {this.state.username ? '' : <SubmitName submitName={this.submitName}/>}
-        <JoinGame gameData={this.state} pickRoom={this.pickRoom} joinRoom={this.joinRoom} JoinGame={this.JoinGame}/>    
+        <JoinGame gameData={this.state} pickRoom={this.pickRoom} joinRoom={this.joinRoom} JoinGame={this.JoinGame}/>
+        {this.state.room ? <GameLobby gameData={this.state} /> : ''}    
       </div>
     );
   }

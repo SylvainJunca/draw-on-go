@@ -70,9 +70,7 @@ io.on('connection', function(socket) {
   socket.on('room', () => {
     const room = createRoom();
     enterRoom(socket, room, socket.username);
-    rooms[room] = [];
     io.emit('listRooms', listRooms());
-    console.log(`List of existing rooms : ${rooms} and ${io.sockets.adapter.rooms}`)
    
   })
   socket.on('join', (room) => {
@@ -80,7 +78,6 @@ io.on('connection', function(socket) {
     console.log(`tries to enter room ${room}`)
     if (rooms[room]) {
       enterRoom(socket, room, socket.username);
-      console.log(`People in the room : ${rooms[room]}`)
     } else {
       socket.emit('err', 'Please verify your code')
     }
