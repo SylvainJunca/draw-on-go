@@ -5,8 +5,8 @@ class SubmitName extends Component {
   render() {
 
     return (
-      <form onSubmit={this.props.submitName}>
-        <input type="text" name="name" placeholder="Please enter your username" maxLength="10"/>
+      <form clasName='SubmitName' onSubmit={this.props.submitName}>
+        <input type="text" name="name" placeholder="Enter your username" maxLength="10"/>
         <input type="submit"/>
       </form>
     )

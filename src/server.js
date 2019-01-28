@@ -21,12 +21,12 @@ const playerEnters = (room) => {
 }
 const playerLeaves = (room, username) => {
   const players = rooms[room];
-  console.log(`players : ${players}`)
+  console.log(`players : ${players} \nremoving ${username}`)
   const newPlayers = players.reduce((acc, player) => {
     if (player !== username) acc.push(player);
     return acc
   }, []);
-  console.log(`${username} should be romoved : ${newPlayers}`)
+  console.log(`Done! \n${username} shouldn't appear on this list : ${newPlayers}`)
   if (newPlayers.length > 0) {
     rooms[room] = newPlayers
     io.to(room).emit('players', rooms[room]);
