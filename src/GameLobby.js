@@ -10,6 +10,7 @@ class GameLobby extends Component {
       <ol>
         {players}
       </ol>
+      <button onClick={this.props.ready}>I'm ready</button>
     )
   }
 }
